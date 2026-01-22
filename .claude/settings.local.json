@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(brew install:*)",
+      "Bash(pip3 install:*)",
+      "Bash(export PATH=\"$PATH:/Users/hsiang-lin/Library/Python/3.9/bin\")",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(npm install:*)",
+      "Bash(npx playwright install chromium)",
+      "Bash(pkill:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(node:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_network_requests",
+      "Bash(python3 -m pip:*)",
+      "Bash(python3:*)"
+    ]
+  }
+}
