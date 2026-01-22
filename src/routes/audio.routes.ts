@@ -72,8 +72,8 @@ audioRouter.get(
 
       // Sanitize filename for download
       const sanitizedTitle = metadata.videoTitle
-        .replace(/[^a-z0-9]/gi, '_')
-        .substring(0, 100);
+        .replace(/[\\/:*?"<>|]/g, '_')
+        .substring(0, 200);
       const filename = `${sanitizedTitle}.mp3`;
 
       // Set response headers

@@ -154,10 +154,10 @@ const app = {
    * @returns {string} - Sanitized filename
    */
   sanitizeFilename(filename) {
+    // Replace characters that are invalid in Windows/Unix filenames
     return filename
-      .replace(/[^a-z0-9\s-]/gi, '_')
-      .replace(/\s+/g, '_')
-      .substring(0, 100);
+      .replace(/[\\/:*?"<>|]/g, '_')
+      .substring(0, 200);
   }
 };
 
