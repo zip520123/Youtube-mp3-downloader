@@ -77,24 +77,32 @@ const app = {
     ui.resetProgress();
 
     let progressEventSource = null;
+    let extractionComplete = false;
 
     try {
-      // Start extraction (this returns immediately with fileId)
-      const extractPromise = api.extractAudio(url);
+      // Start extraction (returns immediately with fileId and metadata)
+      const result = await api.extractAudio(url);
 
-      // Wait for the result
-      const result = await extractPromise;
-
-      // Subscribe to progress updates
+      // Subscribe to progress updates immediately
       progressEventSource = api.subscribeToProgress(result.fileId, (progressData) => {
         ui.updateProgress(progressData.progress || 0, progressData.message || 'Processing...');
+
+        // Check if extraction is complete
+        if (progressData.stage === 'completed' && !extractionComplete) {
+          extractionComplete = true;
+          // Show result when complete
+          ui.showResult(result);
+          // Setup download handler
+          this.setupDownload(result.fileId, result.title);
+        }
+
+        // Handle errors
+        if (progressData.stage === 'error') {
+          ui.showError(progressData.error || 'Extraction failed');
+          ui.hideLoading();
+          ui.enableForm();
+        }
       });
-
-      // Show result when complete
-      ui.showResult(result);
-
-      // Setup download handler
-      this.setupDownload(result.fileId, result.title);
 
       // Reset form
       ui.resetForm();
@@ -103,10 +111,14 @@ const app = {
       // Show error message
       const errorMessage = error.message || 'Failed to extract audio. Please try again';
       ui.showError(errorMessage);
+      ui.hideLoading();
+      ui.enableForm();
     } finally {
-      // Cleanup progress subscription
+      // Cleanup progress subscription after a delay
       if (progressEventSource) {
-        progressEventSource.close();
+        setTimeout(() => {
+          progressEventSource.close();
+        }, 60000);
       }
     }
   },

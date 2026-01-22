@@ -22,18 +22,18 @@ audioRouter.post(
 
       Logger.info(`Extract audio request: ${url}`);
 
-      // Extract audio
-      const result = await AudioService.extractAudio(url);
+      // Start extraction asynchronously and return immediately
+      const { fileId, metadata } = await AudioService.startExtraction(url);
 
-      // Return response with download URL
+      // Return response with download URL immediately
       res.json({
         success: true,
         data: {
-          fileId: result.fileId,
-          title: result.metadata.title,
-          duration: result.metadata.duration,
-          thumbnail: result.metadata.thumbnail,
-          downloadUrl: `/api/download/${result.fileId}`
+          fileId,
+          title: metadata.title,
+          duration: metadata.duration,
+          thumbnail: metadata.thumbnail,
+          downloadUrl: `/api/download/${fileId}`
         }
       });
     } catch (error) {
