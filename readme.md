@@ -223,6 +223,25 @@ npm run dev
 5. **Access the application:**
    - Open your browser to http://localhost:3000
 
+6. **Stop the development server:**
+
+**If running in foreground:**
+```bash
+# Press Ctrl+C in the terminal
+```
+
+**If running in background:**
+```bash
+# Find the Node.js process
+lsof -ti:3000 | xargs kill -9
+
+# Or find and kill by process name
+pkill -f "node.*server"
+
+# Or using ps and grep
+ps aux | grep "node.*server" | grep -v grep | awk '{print $2}' | xargs kill
+```
+
 ### Verification
 
 Test that the server is running:
