@@ -45,7 +45,10 @@ export class YouTubeService {
       Logger.info(`Fetching metadata for: ${url}`);
 
       // Use yt-dlp via python module to get video metadata in JSON format
-      const command = `python3 -m yt_dlp --skip-download --print-json "${url}"`;
+      // Add workarounds for YouTube bot detection:
+      // - Use cookies from browser (Chrome preferred)
+      // Note: Cannot use android client with cookies (they're incompatible)
+      const command = `python3 -m yt_dlp --skip-download --print-json --cookies-from-browser chrome "${url}"`;
 
       const { stdout, stderr } = await execAsync(command, {
         timeout: 30000 // 30 second timeout
