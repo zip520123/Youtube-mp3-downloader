@@ -13,13 +13,18 @@ export class YtDlpAudioService {
         Logger.info(`Starting yt-dlp audio download for: ${url}`);
 
         // Use spawn to capture real-time output for progress
+        // Use flags consistent with YouTubeService for reliability:
+        // - Use cookies from browser (Chrome preferred)
+        // - Use Node.js as JS runtime for signature solving
+        // - Enable remote components for challenge solvers
         const args = [
           '-m', 'yt_dlp',
           '-x',
           '--audio-format', 'mp3',
           '--audio-quality', '192K',
-          '--extractor-args', 'youtube:player_client=android',
-          '--user-agent', 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36',
+          '--cookies-from-browser', 'chrome',
+          '--js-runtimes', 'node',
+          '--remote-components', 'ejs:github',
           '--newline', // Output progress on new lines
           '--progress', // Show progress
           '-o', outputPath,
