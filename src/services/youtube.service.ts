@@ -1,9 +1,10 @@
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { VideoMetadata, ErrorCode } from '../types';
 import { Logger } from '../utils/logger.util';
+import { getYtDlpCommand, getYtDlpMetadataArgs } from '../utils/yt-dlp.util';
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 export class YouTubeService {
   /**
@@ -44,15 +45,10 @@ export class YouTubeService {
     try {
       Logger.info(`Fetching metadata for: ${url}`);
 
-      // Use yt-dlp via python module to get video metadata in JSON format
-      // Add workarounds for YouTube bot detection:
-      // - Use cookies from browser (Chrome preferred)
-      // - Use Node.js as JS runtime for signature solving
-      // - Enable remote components for challenge solvers
-      // Note: Cannot use android client with cookies (they're incompatible)
-      const command = `python3 -m yt_dlp --skip-download --print-json --cookies-from-browser chrome --js-runtimes node --remote-components ejs:github "${url}"`;
+      const { command, args: baseArgs } = getYtDlpCommand();
+      const args = [...baseArgs, ...getYtDlpMetadataArgs(url)];
 
-      const { stdout, stderr } = await execAsync(command, {
+      const { stdout, stderr } = await execFileAsync(command, args, {
         timeout: 30000 // 30 second timeout
       });
 
